@@ -1,0 +1,35 @@
+﻿<Window x:Class="projektpls.Window1"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:projektpls"
+        mc:Ignorable="d"
+        Title="Window1" Height="450" Width="535">
+    <Grid>
+        <Button x:Name="btnRun" Content="Run" HorizontalAlignment="Left" Margin="20,396,0,0" VerticalAlignment="Top" Click="btnRun_Click"/>
+        <Label Content="Aspect" HorizontalAlignment="Left" Margin="145,367,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="btnDEM" Content="DEM" HorizontalAlignment="Left" Margin="145,345,0,0" VerticalAlignment="Top" Click="btnBrowse_Click"/>
+        <TextBox x:Name="txtDEM" HorizontalAlignment="Left" Margin="20,346,0,0" VerticalAlignment="Top" Width="120" TextChanged="tbxFilePath_TextChanged"/>
+        <Button x:Name="btnNature" Content="Nature reserve" HorizontalAlignment="Left" Margin="145,322,0,0" VerticalAlignment="Top" Click="Button_Click"/>
+        <Button x:Name="btnUrban" Content="Urban environment" HorizontalAlignment="Left" Margin="145,299,0,0" VerticalAlignment="Top" Click="btnUrban_Click"/>
+        <Button x:Name="btnWater" Content="Streams and rivers" HorizontalAlignment="Left" Margin="145,276,0,0" VerticalAlignment="Top" Click="btnWater_Click"/>
+        <TextBox x:Name="txtNature" HorizontalAlignment="Left" Margin="20,323,0,0" VerticalAlignment="Top" Width="120" TextChanged="txtNature_TextChanged"/>
+        <TextBox x:Name="txtUrban" HorizontalAlignment="Left" Margin="20,300,0,0" VerticalAlignment="Top" Width="120" TextChanged="txtUrban_TextChanged"/>
+        <TextBox x:Name="txtWater" HorizontalAlignment="Left" Margin="20,277,0,0" VerticalAlignment="Top" Width="120" TextChanged="txtWater_TextChanged"/>
+        <ComboBox x:Name="cmbAspect" HorizontalAlignment="Left" Margin="20,369,0,0" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="txtMinHeight" HorizontalAlignment="Left" Margin="20,254,0,0" TextWrapping="Wrap" Text="10" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged"/>
+        <TextBox x:Name="txtMaxHeight" HorizontalAlignment="Left" Margin="20,231,0,0" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120" TextChanged="txtMaxHeight_TextChanged"/>
+        <Label Content="Maximum slope" HorizontalAlignment="Left" Margin="145,227,0,0" VerticalAlignment="Top"/>
+        <Label Content="Minimum slope" HorizontalAlignment="Left" Margin="145,250,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtHeight" HorizontalAlignment="Left" Margin="20,0,0,0" TextWrapping="Wrap" Text="40" VerticalAlignment="Center" Width="120" TextChanged="txtHeight_TextChanged_1"/>
+        <Label Content="Maximum height" HorizontalAlignment="Left" Margin="145,0,0,0" VerticalAlignment="Center"/>
+        <TextBox x:Name="txtNatureBuffer" HorizontalAlignment="Left" Margin="20,185,0,0" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="120" TextChanged="txtNatureBuffer_TextChanged"/>
+        <Label Content="Nature buffer" HorizontalAlignment="Left" Margin="145,181,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtWaterBuffer" HorizontalAlignment="Left" Margin="20,162,0,0" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120" TextChanged="txtWaterBuffer_TextChanged"/>
+        <Label Content="Water buffer" HorizontalAlignment="Left" Margin="145,158,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtUrbanBuffer" HorizontalAlignment="Left" Margin="20,139,0,0" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Urban buffer" HorizontalAlignment="Left" Margin="145,135,0,0" VerticalAlignment="Top"/>
+
+    </Grid>
+</Window>

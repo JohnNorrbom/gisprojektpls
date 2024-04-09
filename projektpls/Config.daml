@@ -1,0 +1,37 @@
+﻿<ArcGIS defaultAssembly="projektpls.dll" defaultNamespace="projektpls" xmlns="http://schemas.esri.com/DADF/Registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
+  <AddInInfo id="{d0ea06e9-a7d6-46ed-950c-1b4e0bdde8ed}" version="1.0" desktopVersion="3.2.49743">
+    <Name>projektpls</Name>
+    <Description>projektpls description</Description>
+    <Image>Images\AddinDesktop32.png</Image>
+    <Author>22jono03</Author>
+    <Company>Högskolan i Gävle</Company>
+    <Date>4/3/2024 5:45:43 PM</Date>
+    <Subject>Framework</Subject>
+    <!-- Note subject can be one or more of these topics:
+                    Content, Framework, Editing, Geodatabase, Geometry, Geoprocessing, Layouts, Map Authoring, Map Exploration -->
+  </AddInInfo>
+  <modules>
+    <insertModule id="projektpls_Module" className="Module1" autoLoad="false" caption="Module1">
+      <!-- uncomment to have the control hosted on a separate tab-->
+      <tabs>
+        <!--<tab id="projektpls_Tab1" caption="New Tab">
+          <group refID="projektpls_Group1"/>
+        </tab>-->
+      </tabs>
+      <groups>
+        <!-- comment this out if you have no controls on the Addin tab to avoid
+              an empty group-->
+        <group id="projektpls_Group1" caption="Group 1" appearsOnAddInTab="true">
+          <!-- host controls within groups -->
+          <button refID="projektpls_Button1" size="large" />
+        </group>
+      </groups>
+      <controls>
+        <!-- add your controls here -->
+        <button id="projektpls_Button1" caption="Button 1" className="Button1" loadOnClick="true" smallImage="GenericButtonBlue16" largeImage="GenericButtonBlue32">
+          <tooltip heading="Tooltip Heading">Tooltip text<disabledText /></tooltip>
+        </button>
+      </controls>
+    </insertModule>
+  </modules>
+</ArcGIS>
