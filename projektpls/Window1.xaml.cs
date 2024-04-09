@@ -47,12 +47,15 @@ namespace projektpls
         private string slopePath = @"H:\";
         private string aspectPath = @"H:\";
         private string heightPath = @"H:\";
+        private string windPath = @"H:\";
+        private string roadPath = @"H:\";
         private int heightConstraint = 40;
         private int highConstraint = 100;
         private int lowConstraint = 10;
         private int natureConstraint = 50;
         private int waterConstraint = 100;
         private int urbanConstraint = 100;
+        private int roadConstraint = 30;
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             // Allow only numeric characters (0-9) and the decimal point (.)
@@ -106,6 +109,7 @@ namespace projektpls
             CalculateBuffer(natureConstraint, naturePath);
             CalculateBuffer(waterConstraint, waterPath);
             CalculateBuffer(urbanConstraint, urbanPath);
+            CalculateBuffer(roadConstraint, roadPath);
             PolygonToRaster(naturePath);
             PolygonToRaster(waterPath);
             PolygonToRaster(urbanPath);
@@ -340,9 +344,6 @@ namespace projektpls
                 //    $"(Int(\"{aspectPath}\") * Int(\"{slopePath}\") * Int(\"{heightPath}\"))",
                 //    outputRaster
                 //);
-
-                int dssdsd = 1;
-
             });
         }
         private void FillcmbAspect()
@@ -426,6 +427,28 @@ namespace projektpls
         {
             if (int.TryParse(txtWaterBuffer.Text, out int result))
                 waterConstraint = result;
+        }
+
+        private void btnRoad_Click(object sender, RoutedEventArgs e)
+        {
+            txtNature.Text = OpenFileExplorer(path, "SHAPE files (*.shp)|*.shp|All files (*.*)|*.*");
+        }
+
+        private void btnWind_Click(object sender, RoutedEventArgs e)
+        {
+            txtNature.Text = OpenFileExplorer(path, "SHAPE files (*.shp)|*.shp|All files (*.*)|*.*");
+        }
+
+        private void txtRoad_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            roadPath = txtRoad.Text;
+            setPath(roadPath);
+        }
+
+        private void txtWind_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            windPath = txtWind.Text;
+            setPath(windPath);
         }
     }
 }
