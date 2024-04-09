@@ -431,12 +431,12 @@ namespace projektpls
 
         private void btnRoad_Click(object sender, RoutedEventArgs e)
         {
-            txtNature.Text = OpenFileExplorer(path, "SHAPE files (*.shp)|*.shp|All files (*.*)|*.*");
+            txtRoad.Text = OpenFileExplorer(path, "SHAPE files (*.shp)|*.shp|All files (*.*)|*.*");
         }
 
         private void btnWind_Click(object sender, RoutedEventArgs e)
         {
-            txtNature.Text = OpenFileExplorer(path, "SHAPE files (*.shp)|*.shp|All files (*.*)|*.*");
+            txtWind.Text = OpenFileExplorer(path, "SHAPE files (*.shp)|*.shp|All files (*.*)|*.*");
         }
 
         private void txtRoad_TextChanged(object sender, TextChangedEventArgs e)
@@ -449,6 +449,12 @@ namespace projektpls
         {
             windPath = txtWind.Text;
             setPath(windPath);
+        }
+
+        private void txtRoadBuffer_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (int.TryParse(txtRoadBuffer.Text, out int result))
+                roadConstraint = result;
         }
     }
 }

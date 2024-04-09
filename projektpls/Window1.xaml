@@ -18,7 +18,7 @@
         <TextBox x:Name="txtUrban" HorizontalAlignment="Left" Margin="20,300,0,0" VerticalAlignment="Top" Width="120" TextChanged="txtUrban_TextChanged"/>
         <TextBox x:Name="txtWater" HorizontalAlignment="Left" Margin="20,277,0,0" VerticalAlignment="Top" Width="120" TextChanged="txtWater_TextChanged"/>
         <ComboBox x:Name="cmbAspect" HorizontalAlignment="Left" Margin="20,369,0,0" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="txtMinHeight" HorizontalAlignment="Left" Margin="20,207,0,0" TextWrapping="Wrap" Text="10" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged"/>
+        <TextBox x:Name="txtMinHeight" HorizontalAlignment="Left" Margin="20,207,0,0" Text="10" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged"/>
         <TextBox x:Name="txtMaxHeight" HorizontalAlignment="Left" Margin="20,184,0,0" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120" TextChanged="txtMaxHeight_TextChanged"/>
         <Label Content="Maximum slope" HorizontalAlignment="Left" Margin="145,180,0,0" VerticalAlignment="Top"/>
         <Label Content="Minimum slope" HorizontalAlignment="Left" Margin="145,203,0,0" VerticalAlignment="Top"/>
@@ -32,8 +32,10 @@
         <Label Content="Urban buffer" HorizontalAlignment="Left" Margin="145,88,0,0" VerticalAlignment="Top"/>
         <Button x:Name="btnRoad" Content="Roads" HorizontalAlignment="Left" Margin="145,253,0,0" VerticalAlignment="Top" Click="btnRoad_Click"/>
         <Button x:Name="btnWind" Content="Wind" HorizontalAlignment="Left" Margin="145,230,0,0" VerticalAlignment="Top" Click="btnWind_Click"/>
-        <TextBox x:Name="txtWind" HorizontalAlignment="Left" Margin="20,231,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="txtWind_TextChanged"/>
-        <TextBox x:Name="txtRoad" HorizontalAlignment="Left" Margin="20,254,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="txtWind" HorizontalAlignment="Left" Margin="20,231,0,0" VerticalAlignment="Top" Width="120" TextChanged="txtWind_TextChanged"/>
+        <TextBox x:Name="txtRoad" HorizontalAlignment="Left" Margin="20,254,0,0" VerticalAlignment="Top" Width="120"/>
+        <TextBox x:Name="txtRoadBuffer" HorizontalAlignment="Left" Margin="20,69,0,0" VerticalAlignment="Top" Width="120" Text="30" TextChanged="txtRoadBuffer_TextChanged"/>
+        <Label Content="Road buffer" HorizontalAlignment="Left" Margin="145,65,0,0" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>
