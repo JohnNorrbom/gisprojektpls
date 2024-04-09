@@ -33,9 +33,9 @@
         <Button x:Name="btnRoad" Content="Roads" HorizontalAlignment="Left" Margin="145,253,0,0" VerticalAlignment="Top" Click="btnRoad_Click"/>
         <Button x:Name="btnWind" Content="Wind" HorizontalAlignment="Left" Margin="145,230,0,0" VerticalAlignment="Top" Click="btnWind_Click"/>
         <TextBox x:Name="txtWind" HorizontalAlignment="Left" Margin="20,231,0,0" VerticalAlignment="Top" Width="120" TextChanged="txtWind_TextChanged"/>
-        <TextBox x:Name="txtRoad" HorizontalAlignment="Left" Margin="20,254,0,0" VerticalAlignment="Top" Width="120"/>
         <TextBox x:Name="txtRoadBuffer" HorizontalAlignment="Left" Margin="20,69,0,0" VerticalAlignment="Top" Width="120" Text="30" TextChanged="txtRoadBuffer_TextChanged"/>
         <Label Content="Road buffer" HorizontalAlignment="Left" Margin="145,65,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtRoad" HorizontalAlignment="Left" Margin="20,254,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" TextChanged="txtRoad_TextChanged"/>
 
     </Grid>
 </Window>

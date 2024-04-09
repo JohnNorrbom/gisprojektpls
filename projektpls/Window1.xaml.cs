@@ -113,10 +113,6 @@ namespace projektpls
             PolygonToRaster(naturePath);
             PolygonToRaster(waterPath);
             PolygonToRaster(urbanPath);
-            //RasterToPolygon(aspectPath);
-            //sterToPolygon(slopePath);
-            //sterToPolygon(heightPath);
-            PerformMCA();
         }
         private async void CalculateBuffer(int constraint, string path)
         {
@@ -271,81 +267,6 @@ namespace projektpls
             });
         }
 
-        private async void MCA(string path)
-        {
-            string mergedOutput = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path), "MergedPolygons.shp");
-            string multipliedRasterPath = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(demPath), "MultipliedRaster.tif");
-            Map map = MapView.Active.Map;
-            await QueuedTask.Run(() =>
-            {
-                var parameters = Geoprocessing.MakeValueArray($"{heightPath};{aspectPath};{slopePath}", multipliedRasterPath);
-                Geoprocessing.ExecuteToolAsync("RasterCalculator_sa", parameters);
-            });
-            await QueuedTask.Run(() =>
-            {
-                //var layer = map.GetLayersAsFlattenedList()[0];
-                //var parameters = Geoprocessing.MakeValueArray(layer, mergedOutput);
-                //Geoprocessing.ExecuteToolAsync("management.Merge", parameters, null, null, null, GPExecuteToolFlags.Default);
-                //layer = map.GetLayersAsFlattenedList()[1];
-                //parameters = Geoprocessing.MakeValueArray(layer, mergedOutput);
-                //Geoprocessing.ExecuteToolAsync("management.Merge", parameters, null, null, null, GPExecuteToolFlags.Default);
-                //layer = map.GetLayersAsFlattenedList()[2];
-                //parameters = Geoprocessing.MakeValueArray(layer, mergedOutput);
-                //Geoprocessing.ExecuteToolAsync("management.Merge", parameters, null, null, null, GPExecuteToolFlags.Default);
-                //layer = map.GetLayersAsFlattenedList()[3];
-                //parameters = Geoprocessing.MakeValueArray(layer, mergedOutput);
-                //Geoprocessing.ExecuteToolAsync("management.Merge", parameters, null, null, null, GPExecuteToolFlags.Default);
-                //layer = map.GetLayersAsFlattenedList()[4];
-                //parameters = Geoprocessing.MakeValueArray(layer, mergedOutput);
-                //Geoprocessing.ExecuteToolAsync("management.Merge", parameters, null, null, null, GPExecuteToolFlags.Default);
-                //layer = map.GetLayersAsFlattenedList()[5];
-                //parameters = Geoprocessing.MakeValueArray(layer, mergedOutput);
-                //Geoprocessing.ExecuteToolAsync("management.Merge", parameters, null, null, null, GPExecuteToolFlags.Default);
-                //try
-                //{
-                //    // List to store the paths of the intersected layers
-                //    List<string> intersectedLayers = new List<string>();
-
-                //    // Get all layers except the first one (assuming the first one is the raster layer)
-                //    var layers = map.GetLayersAsFlattenedList();
-                // TEST
-                //    // Iterate through each layer
-                //    foreach (var layer in layers)
-                //    {
-                //        // Create a temporary output path for the intersected layer
-                //        string tempOutput = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path), $"{layer.Name}_Intersected.shp");
-
-                //        // Intersect the layer with the previous intersected layers
-                //        var parameters = Geoprocessing.MakeValueArray(path, layer, tempOutput);
-                //        Geoprocessing.ExecuteToolAsync("analysis.Intersect", parameters, null, null, null, GPExecuteToolFlags.Default);
-
-                //        // Add the intersected layer path to the list
-                //        intersectedLayers.Add(tempOutput);
-                //    }
-
-                //    // Merge all the intersected layers
-                //    var mergeParameters = Geoprocessing.MakeValueArray(intersectedLayers.ToArray(), mergedOutput);
-                //    Geoprocessing.ExecuteToolAsync("management.Merge", mergeParameters, null, null, null, GPExecuteToolFlags.Default);
-                //}
-                //catch (Exception ex)
-                //{
-                //    MessageBox.Show($"An error occurred: {ex.Message}");
-                //}
-            });
-        }
-        private async void PerformMCA()
-        {
-            await QueuedTask.Run(async () =>
-            {
-
-                // Step 1: Multiply the 3 raster layers
-                //string outputRaster = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(demPath), "MCA_Raster.tif");
-                //var valueArray = Geoprocessing.MakeValueArray(
-                //    $"(Int(\"{aspectPath}\") * Int(\"{slopePath}\") * Int(\"{heightPath}\"))",
-                //    outputRaster
-                //);
-            });
-        }
         private void FillcmbAspect()
         {
             cmbAspect.Items.Add("North");
@@ -439,12 +360,6 @@ namespace projektpls
             txtWind.Text = OpenFileExplorer(path, "SHAPE files (*.shp)|*.shp|All files (*.*)|*.*");
         }
 
-        private void txtRoad_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            roadPath = txtRoad.Text;
-            setPath(roadPath);
-        }
-
         private void txtWind_TextChanged(object sender, TextChangedEventArgs e)
         {
             windPath = txtWind.Text;
@@ -455,6 +370,12 @@ namespace projektpls
         {
             if (int.TryParse(txtRoadBuffer.Text, out int result))
                 roadConstraint = result;
+        }
+
+        private void txtRoad_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            roadPath = txtRoad.Text;
+            setPath(roadPath);
         }
     }
 }
