@@ -113,6 +113,12 @@ namespace projektpls
             PolygonToRaster(naturePath);
             PolygonToRaster(waterPath);
             PolygonToRaster(urbanPath);
+            BufferToRaster(waterPath.Substring(0, waterPath.Length - 4) + "_buffer.shp", "water");
+            BufferToRaster(roadPath.Substring(0, roadPath.Length - 4) + "_buffer.shp", "roads");
+            BufferToRaster(urbanPath.Substring(0, urbanPath.Length - 4) + "_buffer.shp", "urban");
+            BufferToRaster(naturePath.Substring(0, naturePath.Length - 4) + "_buffer.shp", "nature");
+
+
         }
         private async void CalculateBuffer(int constraint, string path)
         {
@@ -253,6 +259,7 @@ namespace projektpls
                 }
             });
         }
+
         private async void PolygonToRaster(string path) 
         {
             string outputRaster = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path), System.IO.Path.GetFileNameWithoutExtension(path) + "Raster.tif");
@@ -266,6 +273,87 @@ namespace projektpls
                 Geoprocessing.ExecuteToolAsync("PolygonToRaster_conversion", parameters, null, null, null, GPExecuteToolFlags.Default);
             });
         }
+        public void BufferToRaster(string path, string category)
+        {
+            string outputRaster = path.Substring(0, waterPath.Length - 4) + "bufferRaster.tif";
+          
+
+            QueuedTask.Run(() =>
+            {
+                var parameters = Geoprocessing.MakeValueArray(path, null, outputRaster);
+                var gpConversion = Geoprocessing.ExecuteToolAsync("conversion.PolygonToRaster", parameters);
+
+                // Check if the tool executed successfully
+                if (gpConversion.Result.IsFailed)
+                {
+                    MessageBox.Show("Buffer to raster calculation failed.", "Error");
+                    return;
+                }
+                MessageBox.Show("Buffer to raster calculation completed successfully.", "Success");
+                CalculateConstraint(outputRaster, outputRaster.Substring(0, path.Length - 4) + "bufferRasterFinal.tif", category);
+
+
+            });
+        }
+        private void CalculateConstraint(string inRaster, string outRaster, string category)
+        {
+            Map map = MapView.Active.Map;
+            string filepath = inRaster;
+
+            QueuedTask.Run(() =>
+            {
+                
+                RasterLayer rasterLayer = LayerFactory.Instance.CreateLayer(new Uri(filepath), map) as RasterLayer;
+           
+                var raster = rasterLayer.GetRaster();
+
+            
+                var bandnameArray = new string[raster.GetBandCount()];
+                for (int i = 0; i < raster.GetBandCount(); i++)
+                {
+                    var rasterBand = raster.GetBand(i);
+                
+                    var rasterBandName = raster.GetBand(i).GetName();
+
+              
+                    bandnameArray[i] = filepath + "\\" + rasterBandName;
+                }
+
+                string maExpression = string.Empty;
+                if (category.Equals("roads"))
+                {
+                    maExpression = $"Con(IsNull(\"{bandnameArray[0]}\"), 0, 1)";
+                }
+                else
+                {
+                    maExpression = $"Con(IsNull(\"{bandnameArray[0]}\"), 1, 0)";
+                }
+
+                MessageBox.Show(maExpression);
+
+           
+                var valueArray = Geoprocessing.MakeValueArray(maExpression, outRaster);
+
+       
+                var gpToolCalc = Geoprocessing.ExecuteToolAsync("RasterCalculator_sa", valueArray);
+
+     
+                if (gpToolCalc.Result.IsFailed)
+                {
+                 
+                    var errors = gpToolCalc.Result.ErrorMessages.Select(err => err.Text);
+             
+                    MessageBox.Show("Error executing constraint Calculator: " + string.Join(Environment.NewLine, errors));
+                }
+                else
+                {
+                    // Raster calculator executed successfully
+                    MessageBox.Show("constraint Calculator execution successful.");
+                }
+            });
+        }
+
+
 
         private void FillcmbAspect()
         {
