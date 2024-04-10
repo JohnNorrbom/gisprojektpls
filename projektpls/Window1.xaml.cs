@@ -285,7 +285,6 @@ namespace projektpls
                     MessageBox.Show("erase calculation failed.", "Error");
                     return;
                 }
-                MessageBox.Show("erase calculation completed successfully.", "Success");
                 BufferToRaster(output, category);
             });
         }
@@ -320,7 +319,6 @@ namespace projektpls
                     MessageBox.Show("Buffer to raster calculation failed.", "Error");
                     return;
                 }
-                MessageBox.Show("Buffer to raster calculation completed successfully.", "Success");
                 CalculateConstraint(outputRaster, dirPath + "\\" + category + "Final.tif", category);
 
 
@@ -333,7 +331,6 @@ namespace projektpls
             if (category.Equals("nature"))
             {
                 naturePath = outRaster;
-                MessageBox.Show("SLUTGILTIGA NATURE PATH: " + naturePath);
 
             }
             else if (category.Equals("water"))
@@ -441,10 +438,8 @@ namespace projektpls
                 {
                     MessageBox.Show("Filtrering av polygon baserat på gridcode misslyckades.", "Fel");
                 }
-                else
-                {
-                    MessageBox.Show("Filtrering av polygon baserat på gridcode lyckades.", "Succé");
-                }
+
+ 
             });
         }
 
