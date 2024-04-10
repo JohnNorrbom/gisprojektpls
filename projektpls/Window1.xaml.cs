@@ -30,6 +30,7 @@ using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Internal.Mapping.Events;
 using ArcGIS.Desktop.Editing;
 using System.Runtime.CompilerServices;
+using ArcGIS.Desktop.Internal.Mapping.TOC;
 
 namespace projektpls
 {
@@ -49,6 +50,7 @@ namespace projektpls
         private string heightPath = @"H:\";
         private string windPath = @"H:\";
         private string roadPath = @"H:\";
+
         private int heightConstraint = 40;
         private int highConstraint = 100;
         private int lowConstraint = 10;
@@ -113,13 +115,16 @@ namespace projektpls
             PolygonToRaster(naturePath);
             PolygonToRaster(waterPath);
             PolygonToRaster(urbanPath);
-            BufferToRaster(waterPath.Substring(0, waterPath.Length - 4) + "_buffer.shp", "water");
-            BufferToRaster(roadPath.Substring(0, roadPath.Length - 4) + "_buffer.shp", "roads");
-            BufferToRaster(urbanPath.Substring(0, urbanPath.Length - 4) + "_buffer.shp", "urban");
-            BufferToRaster(naturePath.Substring(0, naturePath.Length - 4) + "_buffer.shp", "nature");
 
+            EraseBuffer(naturePath.Substring(0, naturePath.Length - 4) + "_buffer.shp", "nature");
+            EraseBuffer(waterPath.Substring(0, waterPath.Length - 4) + "_buffer.shp", "water");
+            EraseBuffer(roadPath.Substring(0, roadPath.Length - 4) + "_buffer.shp", "roads");
+            EraseBuffer(urbanPath.Substring(0, urbanPath.Length - 4) + "_buffer.shp", "urban");
+            performMCA(roadPath, heightPath, aspectPath, slopePath, naturePath, urbanPath, waterPath);
 
         }
+
+
         private async void CalculateBuffer(int constraint, string path)
         {
             string output = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path), System.IO.Path.GetFileNameWithoutExtension(path) + "_buffer.shp");
@@ -152,6 +157,7 @@ namespace projektpls
                 // Steg 1: Beräkna höjddata
                 var parameters = Geoprocessing.MakeValueArray(expression, outputHeight);
                 Geoprocessing.ExecuteToolAsync("RasterCalculator_sa", parameters);
+                
             });
         }
         private async void CalculateSlope()
@@ -171,6 +177,7 @@ namespace projektpls
                     string expression = $"Con((\"{outputSlope}\" <= {highConstraint}) & (\"{outputSlope}\" >= {lowConstraint}), 1, 0)";
                     parameters = Geoprocessing.MakeValueArray(expression, outputFilteredSlope);
                     Geoprocessing.ExecuteToolAsync("RasterCalculator_sa", parameters);
+                    slopePath = outputFilteredSlope;
                 });
             }
             catch (Exception ex)
@@ -220,6 +227,7 @@ namespace projektpls
             {
                 MessageBox.Show("Error calculating aspect: " + ex.Message);
             }
+            aspectPath = outputFilteredAspect;
         }
         private async void RasterToPolygon(string path)
         {
@@ -259,6 +267,28 @@ namespace projektpls
                 }
             });
         }
+        private void EraseBuffer(string input, string category)
+        {
+            string rutnatpath = @"H:\GIS Applikationsutveckling\Projekt\data\vagkarta\rutnat.shp";
+            string bufferpath = input;
+            string path = Directory.GetCurrentDirectory();
+            string output = path + "\\" + category + "erased.shp";
+
+            QueuedTask.Run(() =>
+            {
+                
+                var parameters = Geoprocessing.MakeValueArray(rutnatpath, bufferpath, output);
+                var gpErase = Geoprocessing.ExecuteToolAsync("Analysis.erase", parameters);
+                
+                if (gpErase.Result.IsFailed)
+                {
+                    MessageBox.Show("erase calculation failed.", "Error");
+                    return;
+                }
+                MessageBox.Show("erase calculation completed successfully.", "Success");
+                BufferToRaster(output, category);
+            });
+        }
 
         private async void PolygonToRaster(string path) 
         {
@@ -275,8 +305,9 @@ namespace projektpls
         }
         public void BufferToRaster(string path, string category)
         {
-            string outputRaster = path.Substring(0, waterPath.Length - 4) + "bufferRaster.tif";
-          
+            string dirPath = Directory.GetCurrentDirectory();
+            string outputRaster = dirPath + "\\" + category + "BufferToRaster.tif";
+
 
             QueuedTask.Run(() =>
             {
@@ -290,17 +321,35 @@ namespace projektpls
                     return;
                 }
                 MessageBox.Show("Buffer to raster calculation completed successfully.", "Success");
-                CalculateConstraint(outputRaster, outputRaster.Substring(0, path.Length - 4) + "bufferRasterFinal.tif", category);
+                CalculateConstraint(outputRaster, dirPath + "\\" + category + "Final.tif", category);
 
 
             });
         }
-        private void CalculateConstraint(string inRaster, string outRaster, string category)
+        private async void CalculateConstraint(string inRaster, string outRaster, string category)
         {
             Map map = MapView.Active.Map;
             string filepath = inRaster;
+            if (category.Equals("nature"))
+            {
+                naturePath = outRaster;
+                MessageBox.Show("SLUTGILTIGA NATURE PATH: " + naturePath);
 
-            QueuedTask.Run(() =>
+            }
+            else if (category.Equals("water"))
+            {
+                waterPath = outRaster;
+            }
+            else if (category.Equals("urban"))
+            {
+                urbanPath = outRaster;
+            }
+            else if (category.Equals("roads"))
+            {
+                roadPath = outRaster;
+            }
+
+            await QueuedTask.Run(() =>
             {
                 
                 RasterLayer rasterLayer = LayerFactory.Instance.CreateLayer(new Uri(filepath), map) as RasterLayer;
@@ -322,16 +371,13 @@ namespace projektpls
                 string maExpression = string.Empty;
                 if (category.Equals("roads"))
                 {
-                    maExpression = $"Con(IsNull(\"{bandnameArray[0]}\"), 0, 1)";
+                    maExpression = $"Con(IsNull(\"{bandnameArray[0]}\"), 1, 0)";
                 }
                 else
                 {
-                    maExpression = $"Con(IsNull(\"{bandnameArray[0]}\"), 1, 0)";
+                    maExpression = $"Con(IsNull(\"{bandnameArray[0]}\"), 0, 1)";
                 }
 
-                MessageBox.Show(maExpression);
-
-           
                 var valueArray = Geoprocessing.MakeValueArray(maExpression, outRaster);
 
        
@@ -347,11 +393,27 @@ namespace projektpls
                 }
                 else
                 {
-                    // Raster calculator executed successfully
-                    MessageBox.Show("constraint Calculator execution successful.");
+ 
                 }
+
+
+
             });
         }
+        private async Task performMCA(string roadPath, string heightPath, string aspectPath, string slopePath, string naturePath, string urbanPath, string waterPath)
+        {
+            await QueuedTask.Run(() =>
+            {
+                MessageBox.Show("MCA" + roadPath);
+                MessageBox.Show("MCA" + heightPath);
+                MessageBox.Show("MCA" + aspectPath);
+                MessageBox.Show("MCA" + slopePath);
+                MessageBox.Show("MCA" + naturePath);
+                MessageBox.Show("MCA" + urbanPath);
+                MessageBox.Show("MCA" + waterPath);
+            });
+        }
+
 
 
 
