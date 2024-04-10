@@ -112,15 +112,15 @@ namespace projektpls
             CalculateBuffer(waterConstraint, waterPath);
             CalculateBuffer(urbanConstraint, urbanPath);
             CalculateBuffer(roadConstraint, roadPath);
-            PolygonToRaster(naturePath);
-            PolygonToRaster(waterPath);
-            PolygonToRaster(urbanPath);
+            //PolygonToRaster(naturePath);
+            //PolygonToRaster(waterPath);
+            //PolygonToRaster(urbanPath);
 
             EraseBuffer(naturePath.Substring(0, naturePath.Length - 4) + "_buffer.shp", "nature");
             EraseBuffer(waterPath.Substring(0, waterPath.Length - 4) + "_buffer.shp", "water");
             EraseBuffer(roadPath.Substring(0, roadPath.Length - 4) + "_buffer.shp", "roads");
             EraseBuffer(urbanPath.Substring(0, urbanPath.Length - 4) + "_buffer.shp", "urban");
-            performMCA(roadPath, heightPath, aspectPath, slopePath, naturePath, urbanPath, waterPath);
+            performMCA();
 
         }
 
@@ -400,20 +400,53 @@ namespace projektpls
 
             });
         }
-        private async Task performMCA(string roadPath, string heightPath, string aspectPath, string slopePath, string naturePath, string urbanPath, string waterPath)
+        private async Task performMCA()
         {
             await QueuedTask.Run(() =>
             {
-                MessageBox.Show("MCA" + roadPath);
-                MessageBox.Show("MCA" + heightPath);
-                MessageBox.Show("MCA" + aspectPath);
-                MessageBox.Show("MCA" + slopePath);
-                MessageBox.Show("MCA" + naturePath);
-                MessageBox.Show("MCA" + urbanPath);
-                MessageBox.Show("MCA" + waterPath);
+                string path = Directory.GetCurrentDirectory();
+                
+                string maExpression = $"Int(\"{roadPath}\") * Int(\"{waterPath}\") * Int(\"{urbanPath}\") * Int(\"{naturePath}\") * Int(\"{aspectPath}\") * Int(\"{heightPath}\")* Int(\"{slopePath}\")";
+
+                string outRaster = path + "\\MCA.tif";
+
+                var valueArray = Geoprocessing.MakeValueArray(maExpression, outRaster);
+                // execute the Raster calculator tool to process the map algebra expression
+                var gpTool = Geoprocessing.ExecuteToolAsync("RasterCalculator_sa", valueArray);
+                ConvertFinalRasterToPolygon(outRaster);
             });
         }
+        private async void ConvertFinalRasterToPolygon(string inRaster)
+        {
+            string intermediateShapefilePath = Directory.GetCurrentDirectory() + "\\intermediate_output_polygon.shp";
+            string finalShapefilePath = Directory.GetCurrentDirectory() + "\\final_filtered_polygon.shp";
 
+            await QueuedTask.Run(async () =>
+            {
+               
+                var parameters = Geoprocessing.MakeValueArray(inRaster, intermediateShapefilePath, "NO_SIMPLIFY", "VALUE");
+                var gpResult = await Geoprocessing.ExecuteToolAsync("RasterToPolygon_conversion", parameters);
+
+                if (gpResult.IsFailed)
+                {
+                    MessageBox.Show("Omvandling från raster till polygon misslyckades.", "Fel");
+                    return;
+                }
+
+                
+                var selectParameters = Geoprocessing.MakeValueArray(intermediateShapefilePath, finalShapefilePath, "\"gridcode\" = 1");
+                var selectResult = await Geoprocessing.ExecuteToolAsync("Select_analysis", selectParameters);
+
+                if (selectResult.IsFailed)
+                {
+                    MessageBox.Show("Filtrering av polygon baserat på gridcode misslyckades.", "Fel");
+                }
+                else
+                {
+                    MessageBox.Show("Filtrering av polygon baserat på gridcode lyckades.", "Succé");
+                }
+            });
+        }
 
 
 
