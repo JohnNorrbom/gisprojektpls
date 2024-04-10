@@ -50,6 +50,7 @@ namespace projektpls
         private string heightPath = @"H:\";
         private string windPath = @"H:\";
         private string roadPath = @"H:\";
+        private string rutnatPath = @"H:\";
 
         private int heightConstraint = 40;
         private int highConstraint = 100;
@@ -269,7 +270,7 @@ namespace projektpls
         }
         private void EraseBuffer(string input, string category)
         {
-            string rutnatpath = @"H:\GIS Applikationsutveckling\Projekt\data\vagkarta\rutnat.shp";
+            
             string bufferpath = input;
             string path = Directory.GetCurrentDirectory();
             string output = path + "\\" + category + "erased.shp";
@@ -277,7 +278,7 @@ namespace projektpls
             QueuedTask.Run(() =>
             {
                 
-                var parameters = Geoprocessing.MakeValueArray(rutnatpath, bufferpath, output);
+                var parameters = Geoprocessing.MakeValueArray(rutnatPath, bufferpath, output);
                 var gpErase = Geoprocessing.ExecuteToolAsync("Analysis.erase", parameters);
                 
                 if (gpErase.Result.IsFailed)
@@ -554,6 +555,17 @@ namespace projektpls
         {
             roadPath = txtRoad.Text;
             setPath(roadPath);
+        }
+
+        private void btnRutnat_Click(object sender, RoutedEventArgs e)
+        {
+            txtRutnat.Text = OpenFileExplorer(path, "SHAPE files (*.shp)|*.shp|All files (*.*)|*.*");
+        }
+
+        private void txtRutnat_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            rutnatPath = txtRutnat.Text;
+            setPath(rutnatPath);
         }
     }
 }
