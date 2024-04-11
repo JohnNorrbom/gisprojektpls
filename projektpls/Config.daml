@@ -28,7 +28,7 @@
       </groups>
       <controls>
         <!-- add your controls here -->
-        <button id="projektpls_Button1" caption="Button 1" className="Button1" loadOnClick="true" smallImage="GenericButtonBlue16" largeImage="GenericButtonBlue32">
+        <button id="projektpls_Button1" caption="Wind Turbine Calculator" className="Button1" loadOnClick="true" smallImage="CalculateGeometry32" largeImage="CalculateGeometry32">
           <tooltip heading="Tooltip Heading">Tooltip text<disabledText /></tooltip>
         </button>
       </controls>
