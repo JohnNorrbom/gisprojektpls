@@ -106,50 +106,82 @@ namespace projektpls
 
         private void btnRun_Click(object sender, RoutedEventArgs e)
         {
+            if(rutnatPath.Equals(@"H:\"))
+            {
+                MessageBox.Show("Ange rutnät tack!");
+                return;
+            } 
+            else if(roadPath.Equals(@"H:\"))
+            {
+                MessageBox.Show("Ange vägar tack!");
+                return;
+            }
             CalculateSlope();
+            
             CalculateAspect();
+            
             CalculateHeight(heightConstraint);
+
             CalculateBuffer(natureConstraint, naturePath);
             CalculateBuffer(waterConstraint, waterPath);
             CalculateBuffer(urbanConstraint, urbanPath);
             CalculateBuffer(roadConstraint, roadPath);
-            //PolygonToRaster(naturePath);
-            //PolygonToRaster(waterPath);
-            //PolygonToRaster(urbanPath);
 
-            EraseBuffer(naturePath.Substring(0, naturePath.Length - 4) + "_buffer.shp", "nature");
-            EraseBuffer(waterPath.Substring(0, waterPath.Length - 4) + "_buffer.shp", "water");
-            EraseBuffer(roadPath.Substring(0, roadPath.Length - 4) + "_buffer.shp", "roads");
-            EraseBuffer(urbanPath.Substring(0, urbanPath.Length - 4) + "_buffer.shp", "urban");
+            EraseBuffer(naturePath, "nature");
+            EraseBuffer(waterPath, "water");
+            EraseBuffer(roadPath, "roads");
+            EraseBuffer(urbanPath, "urban");
+
+            BufferToRaster(naturePath, "nature");
+            BufferToRaster(waterPath, "water");
+            BufferToRaster(roadPath, "roads");
+            BufferToRaster(urbanPath, "urban");
+
+            CalculateConstraint(naturePath, "nature");
+            CalculateConstraint(waterPath, "water");
+            CalculateConstraint(roadPath, "roads");
+            CalculateConstraint(urbanPath, "urban");
+
             performMCA();
-
         }
 
 
         private async void CalculateBuffer(int constraint, string path)
         {
+            if(path.Equals(@"H:\"))
+            {
+                return;
+            }
             string output = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path), System.IO.Path.GetFileNameWithoutExtension(path) + "_buffer.shp");
+            if (naturePath.Equals(path))
+            {
+                naturePath = output;
+            }
+            else if (waterPath.Equals(path))
+            {
+                waterPath = output;
+            }
+            else if (urbanPath.Equals(path))
+            {
+                urbanPath = output;
+            }
+            else if (roadPath.Equals(path))
+            {
+                roadPath = output;
+            }
             await QueuedTask.Run(() =>
             {
                 // Steg 1: Gör en buffer på shape filen
                 var parameters = Geoprocessing.MakeValueArray(path, output, $"{constraint} Meters");
                 Geoprocessing.ExecuteToolAsync("Buffer_analysis", parameters, null, null, null, GPExecuteToolFlags.Default);
             });
-            if(naturePath.Equals(path))
-            {
-                naturePath = output;
-            } 
-            else if (waterPath.Equals(path))
-            {
-                waterPath = output;
-            } 
-            else if(urbanPath.Equals(path))
-            {
-                urbanPath = output;
-            }
         }
         private async void CalculateHeight(int constraint)
         {
+            if (demPath.Equals(@"H:\"))
+            {
+                return;
+            }
             string outputHeight = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(demPath), "Height.tif");
             string expression = $"Con((\"{demPath}\" < {constraint}), 1, 0)";
             heightPath = outputHeight;
@@ -163,7 +195,10 @@ namespace projektpls
         }
         private async void CalculateSlope()
         {
-
+            if (demPath.Equals(@"H:\") || roadPath.Equals(@"H:\"))
+            {
+                return;
+            }
             string outputSlope = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(demPath), "Slope.tif");
             string outputFilteredSlope = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(demPath), "SlopeFiltered.tif");
             slopePath = outputFilteredSlope;
@@ -188,6 +223,10 @@ namespace projektpls
         }
         private async void CalculateAspect()
         {
+            if (demPath.Equals(@"H:\"))
+            {
+                return;
+            }
             string outputAspect = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(demPath), "Aspect.tif");
             string outputFilteredAspect = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(demPath), "FilteredAspect.tif");
             aspectPath = outputFilteredAspect;
@@ -270,10 +309,29 @@ namespace projektpls
         }
         private void EraseBuffer(string input, string category)
         {
-            
+            if (input.Equals(@"H:\"))
+            {
+                return;
+            }
             string bufferpath = input;
             string path = Directory.GetCurrentDirectory();
             string output = path + "\\" + category + "erased.shp";
+            if (naturePath.Equals(input))
+            {
+                naturePath = output;
+            }
+            else if (waterPath.Equals(input))
+            {
+                waterPath = output;
+            }
+            else if (urbanPath.Equals(input))
+            {
+                urbanPath = output;
+            }
+            else if (roadPath.Equals(input))
+            {
+                roadPath = output;
+            }
 
             QueuedTask.Run(() =>
             {
@@ -286,7 +344,6 @@ namespace projektpls
                     MessageBox.Show("erase calculation failed.", "Error");
                     return;
                 }
-                BufferToRaster(output, category);
             });
         }
 
@@ -305,10 +362,29 @@ namespace projektpls
         }
         public void BufferToRaster(string path, string category)
         {
+            if (path.Equals(@"H:\"))
+            {
+                return;
+            }
             string dirPath = Directory.GetCurrentDirectory();
             string outputRaster = dirPath + "\\" + category + "BufferToRaster.tif";
+            if (category.Equals("nature"))
+            {
+                naturePath = outputRaster;
 
-
+            }
+            else if (category.Equals("water"))
+            {
+                waterPath = outputRaster;
+            }
+            else if (category.Equals("urban"))
+            {
+                urbanPath = outputRaster;
+            }
+            else if (category.Equals("roads"))
+            {
+                roadPath = outputRaster;
+            }
             QueuedTask.Run(() =>
             {
                 var parameters = Geoprocessing.MakeValueArray(path, null, outputRaster);
@@ -320,15 +396,18 @@ namespace projektpls
                     MessageBox.Show("Buffer to raster calculation failed.", "Error");
                     return;
                 }
-                CalculateConstraint(outputRaster, dirPath + "\\" + category + "Final.tif", category);
-
-
             });
         }
-        private async void CalculateConstraint(string inRaster, string outRaster, string category)
+        private async void CalculateConstraint(string inRaster, string category)
         {
+            if (inRaster.Equals(@"H:\"))
+            {
+                return;
+            }
             Map map = MapView.Active.Map;
             string filepath = inRaster;
+            string dirPath = Directory.GetCurrentDirectory();
+            string outRaster = dirPath + "\\" + category + "Final.tif";
             if (category.Equals("nature"))
             {
                 naturePath = outRaster;
@@ -398,14 +477,30 @@ namespace projektpls
 
             });
         }
-        private async Task performMCA()
+        private async void performMCA()
         {
+            string path = Directory.GetCurrentDirectory();
+            string maExpression = $"Int(\"{roadPath}\")";
+            if (!demPath.Equals(@"H:\"))
+            {
+                //maExpression = $"Int(\"{roadPath}\") * Int(\"{waterPath}\") * Int(\"{urbanPath}\") * Int(\"{naturePath}\") * Int(\"{aspectPath}\") * Int(\"{heightPath}\") * Int(\"{slopePath}\")";
+                maExpression += $" * Int(\"{aspectPath}\") * Int(\"{heightPath}\")* Int(\"{slopePath}\")";
+            }
+            if (!waterPath.Equals(@"H:\"))
+            {
+                maExpression += $" * Int(\"{waterPath}\")";
+            }
+            if (!urbanPath.Equals(@"H:\"))
+            {
+                maExpression += $" * Int(\"{urbanPath}\")";
+            }
+            if (!naturePath.Equals(@"H:\"))
+            {
+                maExpression += $" * Int(\"{naturePath}\")";
+            }
+            MessageBox.Show(maExpression);
             await QueuedTask.Run(() =>
             {
-                string path = Directory.GetCurrentDirectory();
-                
-                string maExpression = $"Int(\"{roadPath}\") * Int(\"{waterPath}\") * Int(\"{urbanPath}\") * Int(\"{naturePath}\") * Int(\"{aspectPath}\") * Int(\"{heightPath}\")* Int(\"{slopePath}\")";
-
                 string outRaster = path + "\\MCA.tif";
 
                 var valueArray = Geoprocessing.MakeValueArray(maExpression, outRaster);
@@ -427,7 +522,7 @@ namespace projektpls
 
                 if (gpResult.IsFailed)
                 {
-                    MessageBox.Show("Omvandling från raster till polygon misslyckades.", "Fel");
+                    MessageBox.Show("Omvandling från raster till polygon misslyckades." + inRaster, "Fel");
                     return;
                 }
 

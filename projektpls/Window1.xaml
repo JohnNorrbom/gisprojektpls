@@ -36,7 +36,7 @@
         <TextBox x:Name="txtRoadBuffer" HorizontalAlignment="Left" Margin="20,69,0,0" VerticalAlignment="Top" Width="120" Text="30" TextChanged="txtRoadBuffer_TextChanged"/>
         <Label Content="Road buffer" HorizontalAlignment="Left" Margin="145,65,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="txtRoad" HorizontalAlignment="Left" Margin="20,254,0,0" VerticalAlignment="Top" Width="120" TextChanged="txtRoad_TextChanged"/>
-        <TextBox x:Name="txtRutnat" HorizontalAlignment="Left" Margin="331,63,0,0" Text="Polygon" VerticalAlignment="Top" Width="120" TextChanged="txtRutnat_TextChanged"/>
+        <TextBox x:Name="txtRutnat" HorizontalAlignment="Left" Margin="331,63,0,0" VerticalAlignment="Top" Width="120" TextChanged="txtRutnat_TextChanged"/>
         <Label x:Name="lblRutnat" Content="Enter rutnat.shp" HorizontalAlignment="Left" Margin="331,37,0,0" VerticalAlignment="Top" Width="150"/>
         <Button x:Name="btnRutnat" Content="Rutnat" HorizontalAlignment="Left" Margin="466,62,0,0" VerticalAlignment="Top" Click="btnRutnat_Click"/>
 
