@@ -59,27 +59,6 @@ namespace projektpls
         private int waterConstraint = 100;
         private int urbanConstraint = 100;
         private int roadConstraint = 30;
-        private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            // Allow only numeric characters (0-9) and the decimal point (.)
-            if (!IsNumeric(e.Text))
-            {
-                e.Handled = true; // Prevent the character from being entered
-            }
-        }
-
-        private bool IsNumeric(string text)
-        {
-            foreach (char c in text)
-            {
-                if (!char.IsDigit(c) && c != '.')
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
 
         private string OpenFileExplorer(string initialDirectory, string filter)
         {
@@ -206,7 +185,7 @@ namespace projektpls
             {
                 await QueuedTask.Run(() =>
                 {
-                    // Steg 1: Beräkns sluttningen
+                    // Steg 1: Beräkna sluttningen
                     var parameters = Geoprocessing.MakeValueArray(demPath, outputSlope, "DEGREE", 1);
                     Geoprocessing.ExecuteToolAsync("3d.Slope", parameters, null, null, null, GPExecuteToolFlags.Default);
                     // Steg 2: Avgränsa datan
@@ -269,44 +248,7 @@ namespace projektpls
             }
             aspectPath = outputFilteredAspect;
         }
-        private async void RasterToPolygon(string path)
-        {
-            Map map = MapView.Active.Map;
-            string outputPolygon = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path), System.IO.Path.GetFileNameWithoutExtension(path) + "Polygon.shp");
-            await QueuedTask.Run(() =>
-            {
-                // Steg 1: Konverterar från raster till polygon
-                //r parameters = Geoprocessing.MakeValueArray(path, outputPolygon, "NO_SIMPLIFY", "Value");
-                var parameters = Geoprocessing.MakeValueArray(path, outputPolygon, "NO_SIMPLIFY", "\"gridcode\" = 1");
-                Geoprocessing.ExecuteToolAsync("RasterToPolygon_conversion", parameters, null, null, null, GPExecuteToolFlags.Default);
-                var firstLayer = MapView.Active.Map.GetLayersAsFlattenedList()[0] as FeatureLayer;
-                // Steg 2: Ta bort alla polygoner med värdet 0
-                // Find the output polygon layer
-                var outputLayer = map.GetLayersAsFlattenedList().OfType<FeatureLayer>().FirstOrDefault(layer => layer.GetFeatureClass().GetName().Equals(System.IO.Path.GetFileNameWithoutExtension(outputPolygon)));
-                if (outputLayer != null)
-                {
-                    var delOp = new EditOperation()
-                    {
-                        Name = "Delete polygons with Value 0"
-                    };
-                    string fieldName = "gridcode";
-                    var queryFilter = new QueryFilter()
-                    {
-                        WhereClause = $"{fieldName} = 0"
-                    };
-                    // Select polygons with Value = 0
-                    var selection = outputLayer.Select(queryFilter);
-                    // Assuming we have a selection on the layer...
-                    delOp.Delete(outputLayer, selection.GetObjectIDs());
-                    // Execute the edit operation asynchronously
-                    delOp.ExecuteAsync(); // You can await it here if necessary
-                }
-                else
-                {
-                    MessageBox.Show("Failed to convert raster to polygon or the result is invalid.");
-                }
-            });
-        }
+        
         private void EraseBuffer(string input, string category)
         {
             if (input.Equals(@"H:\"))
@@ -347,19 +289,6 @@ namespace projektpls
             });
         }
 
-        private async void PolygonToRaster(string path) 
-        {
-            string outputRaster = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path), System.IO.Path.GetFileNameWithoutExtension(path) + "Raster.tif");
-            path = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(path), System.IO.Path.GetFileNameWithoutExtension(path) + "_buffer.shp");
-
-            await QueuedTask.Run(() =>
-            {
-
-                var expression = $"Con((\"{outputRaster}\" == null), 1,0)";
-                var parameters = Geoprocessing.MakeValueArray(expression, null,outputRaster);
-                Geoprocessing.ExecuteToolAsync("PolygonToRaster_conversion", parameters, null, null, null, GPExecuteToolFlags.Default);
-            });
-        }
         public void BufferToRaster(string path, string category)
         {
             if (path.Equals(@"H:\"))
@@ -390,7 +319,6 @@ namespace projektpls
                 var parameters = Geoprocessing.MakeValueArray(path, null, outputRaster);
                 var gpConversion = Geoprocessing.ExecuteToolAsync("conversion.PolygonToRaster", parameters);
 
-                // Check if the tool executed successfully
                 if (gpConversion.Result.IsFailed)
                 {
                     MessageBox.Show("Buffer to raster calculation failed.", "Error");
@@ -498,7 +426,6 @@ namespace projektpls
             {
                 maExpression += $" * Int(\"{naturePath}\")";
             }
-            MessageBox.Show(maExpression);
             await QueuedTask.Run(() =>
             {
                 string outRaster = path + "\\MCA.tif";
@@ -551,6 +478,7 @@ namespace projektpls
             cmbAspect.Items.Add("Southwest");
             cmbAspect.Items.Add("West");
             cmbAspect.Items.Add("Northwest");
+            cmbAspect.SelectedIndex = 0;
         }
         private void btnBrowse_Click(object sender, RoutedEventArgs e)
         {

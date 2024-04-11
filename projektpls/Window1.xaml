@@ -5,44 +5,48 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:projektpls"
         mc:Ignorable="d"
-        Title="Wind Turbine Calculator" Height="450" Width="535">
+        Title="Wind Turbine Calculator" Height="257" Width="535">
+    <Window.Background>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FF1E356F"/>
+            <GradientStop Color="#FF5B9CD8" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.Background>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="49*"/>
-            <ColumnDefinition Width="486*"/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="btnRun" Content="Run" HorizontalAlignment="Left" Margin="20,396,0,0" VerticalAlignment="Top" Click="btnRun_Click"/>
-        <Label Content="Aspect" HorizontalAlignment="Left" Margin="96,367,0,0" VerticalAlignment="Top" Grid.Column="1"/>
-        <Button x:Name="btnDEM" Content="DEM" HorizontalAlignment="Left" Margin="96,345,0,0" VerticalAlignment="Top" Click="btnBrowse_Click" Grid.Column="1"/>
-        <TextBox x:Name="txtDEM" HorizontalAlignment="Left" Margin="20,346,0,0" VerticalAlignment="Top" Width="120" TextChanged="tbxFilePath_TextChanged" Grid.ColumnSpan="2"/>
-        <Button x:Name="btnNature" Content="Nature reserve" HorizontalAlignment="Left" Margin="96,322,0,0" VerticalAlignment="Top" Click="Button_Click" Grid.Column="1"/>
-        <Button x:Name="btnUrban" Content="Urban environment" HorizontalAlignment="Left" Margin="96,299,0,0" VerticalAlignment="Top" Click="btnUrban_Click" Grid.Column="1"/>
-        <Button x:Name="btnWater" Content="Streams and rivers" HorizontalAlignment="Left" Margin="96,276,0,0" VerticalAlignment="Top" Click="btnWater_Click" Grid.Column="1"/>
-        <TextBox x:Name="txtNature" HorizontalAlignment="Left" Margin="20,323,0,0" VerticalAlignment="Top" Width="120" TextChanged="txtNature_TextChanged" Grid.ColumnSpan="2"/>
-        <TextBox x:Name="txtUrban" HorizontalAlignment="Left" Margin="20,300,0,0" VerticalAlignment="Top" Width="120" TextChanged="txtUrban_TextChanged" Grid.ColumnSpan="2"/>
-        <TextBox x:Name="txtWater" HorizontalAlignment="Left" Margin="20,277,0,0" VerticalAlignment="Top" Width="120" TextChanged="txtWater_TextChanged" Grid.ColumnSpan="2"/>
-        <ComboBox x:Name="cmbAspect" HorizontalAlignment="Left" Margin="20,369,0,0" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2"/>
-        <TextBox x:Name="txtMinHeight" HorizontalAlignment="Left" Margin="20,207,0,0" Text="10" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged" Grid.ColumnSpan="2"/>
-        <TextBox x:Name="txtMaxHeight" HorizontalAlignment="Left" Margin="20,184,0,0" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120" TextChanged="txtMaxHeight_TextChanged" Grid.ColumnSpan="2"/>
-        <Label Content="Maximum slope" HorizontalAlignment="Left" Margin="96,180,0,0" VerticalAlignment="Top" Grid.Column="1"/>
-        <Label Content="Minimum slope" HorizontalAlignment="Left" Margin="96,203,0,0" VerticalAlignment="Top" Grid.Column="1"/>
-        <TextBox x:Name="txtHeight" HorizontalAlignment="Left" Margin="20,161,0,0" TextWrapping="Wrap" Text="40" VerticalAlignment="Top" Width="120" TextChanged="txtHeight_TextChanged_1" Grid.ColumnSpan="2"/>
-        <Label Content="Maximum height" HorizontalAlignment="Left" Margin="96,157,0,0" VerticalAlignment="Top" Grid.Column="1"/>
-        <TextBox x:Name="txtNatureBuffer" HorizontalAlignment="Left" Margin="20,138,0,0" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="120" TextChanged="txtNatureBuffer_TextChanged" Grid.ColumnSpan="2"/>
-        <Label Content="Nature buffer" HorizontalAlignment="Left" Margin="96,134,0,0" VerticalAlignment="Top" Grid.Column="1"/>
-        <TextBox x:Name="txtWaterBuffer" HorizontalAlignment="Left" Margin="20,115,0,0" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120" TextChanged="txtWaterBuffer_TextChanged" Grid.ColumnSpan="2"/>
-        <Label Content="Water buffer" HorizontalAlignment="Left" Margin="96,111,0,0" VerticalAlignment="Top" Grid.Column="1"/>
-        <TextBox x:Name="txtUrbanBuffer" HorizontalAlignment="Left" Margin="20,92,0,0" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120" Grid.ColumnSpan="2"/>
-        <Label Content="Urban buffer" HorizontalAlignment="Left" Margin="96,88,0,0" VerticalAlignment="Top" Grid.Column="1"/>
-        <Button x:Name="btnRoad" Content="Roads" HorizontalAlignment="Left" Margin="96,253,0,0" VerticalAlignment="Top" Click="btnRoad_Click" Grid.Column="1"/>
-        <Button x:Name="btnWind" Content="Wind" HorizontalAlignment="Left" Margin="96,230,0,0" VerticalAlignment="Top" Click="btnWind_Click" Grid.Column="1"/>
-        <TextBox x:Name="txtWind" HorizontalAlignment="Left" Margin="20,231,0,0" VerticalAlignment="Top" Width="120" TextChanged="txtWind_TextChanged" Grid.ColumnSpan="2"/>
-        <TextBox x:Name="txtRoadBuffer" HorizontalAlignment="Left" Margin="20,69,0,0" VerticalAlignment="Top" Width="120" Text="30" TextChanged="txtRoadBuffer_TextChanged" Grid.ColumnSpan="2"/>
-        <Label Content="Road buffer" HorizontalAlignment="Left" Margin="96,65,0,0" VerticalAlignment="Top" Grid.Column="1"/>
-        <TextBox x:Name="txtRoad" HorizontalAlignment="Left" Margin="20,254,0,0" VerticalAlignment="Top" Width="120" TextChanged="txtRoad_TextChanged" Grid.ColumnSpan="2"/>
-        <TextBox x:Name="txtRutnat" HorizontalAlignment="Left" Margin="282,63,0,0" Text="Polygon" VerticalAlignment="Top" Width="120" TextChanged="txtRutnat_TextChanged" Grid.Column="1"/>
-        <Label x:Name="lblRutnat" Content="Enter rutnat.shp" HorizontalAlignment="Left" Margin="282,37,0,0" VerticalAlignment="Top" Width="150" Grid.Column="1"/>
-        <Button x:Name="btnRutnat" Content="Rutnat" HorizontalAlignment="Left" Margin="417,62,0,0" VerticalAlignment="Top" Click="btnRutnat_Click" Grid.Column="1"/>
+        <Button x:Name="btnRun" Content="Run" HorizontalAlignment="Left" Margin="242,172,0,0" VerticalAlignment="Top" Click="btnRun_Click" Width="232" BorderBrush="#FF707070" Background="White"/>
+        <Label Content="Aspect" HorizontalAlignment="Left" Margin="137,169,0,0" VerticalAlignment="Top" Width="100" Foreground="#FFF9F9F9"/>
+        <Button x:Name="btnDEM" Content="DEM" HorizontalAlignment="Left" Margin="367,125,0,0" VerticalAlignment="Top" Click="btnBrowse_Click" Width="107" Background="White"/>
+        <TextBox x:Name="txtDEM" HorizontalAlignment="Left" Margin="242,126,0,0" VerticalAlignment="Top" Width="120" TextChanged="tbxFilePath_TextChanged"/>
+        <Button x:Name="btnNature" Content="Nature reserve" HorizontalAlignment="Left" Margin="367,102,0,0" VerticalAlignment="Top" Click="Button_Click" Width="107" Background="White"/>
+        <Button x:Name="btnUrban" Content="Urban environment" HorizontalAlignment="Left" Margin="367,79,0,0" VerticalAlignment="Top" Click="btnUrban_Click" Background="White"/>
+        <Button x:Name="btnWater" Content="Streams and rivers" HorizontalAlignment="Left" Margin="367,56,0,0" VerticalAlignment="Top" Click="btnWater_Click" Width="107" Background="White"/>
+        <TextBox x:Name="txtNature" HorizontalAlignment="Left" Margin="242,103,0,0" VerticalAlignment="Top" Width="120" TextChanged="txtNature_TextChanged"/>
+        <TextBox x:Name="txtUrban" HorizontalAlignment="Left" Margin="242,80,0,0" VerticalAlignment="Top" Width="120" TextChanged="txtUrban_TextChanged"/>
+        <TextBox x:Name="txtWater" HorizontalAlignment="Left" Margin="242,57,0,0" VerticalAlignment="Top" Width="120" TextChanged="txtWater_TextChanged"/>
+        <ComboBox x:Name="cmbAspect" HorizontalAlignment="Left" Margin="12,172,0,0" VerticalAlignment="Top" Width="120" Background="White"/>
+        <TextBox x:Name="txtMinHeight" HorizontalAlignment="Left" Margin="12,149,0,0" Text="10" VerticalAlignment="Top" Width="120" TextChanged="TextBox_TextChanged"/>
+        <TextBox x:Name="txtMaxHeight" HorizontalAlignment="Left" Margin="12,126,0,0" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120" TextChanged="txtMaxHeight_TextChanged"/>
+        <Label Content="Maximum slope" HorizontalAlignment="Left" Margin="137,122,0,0" VerticalAlignment="Top" Width="100" Foreground="#FFF9F9F9"/>
+        <Label Content="Minimum slope" HorizontalAlignment="Left" Margin="137,145,0,0" VerticalAlignment="Top" Width="100" Foreground="#FFF9F9F9"/>
+        <TextBox x:Name="txtHeight" HorizontalAlignment="Left" Margin="12,103,0,0" TextWrapping="Wrap" Text="40" VerticalAlignment="Top" Width="120" TextChanged="txtHeight_TextChanged_1"/>
+        <Label Content="Maximum height" HorizontalAlignment="Left" Margin="137,99,0,0" VerticalAlignment="Top" Foreground="#FFF9F9F9"/>
+        <TextBox x:Name="txtNatureBuffer" HorizontalAlignment="Left" Margin="12,80,0,0" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="120" TextChanged="txtNatureBuffer_TextChanged"/>
+        <Label Content="Nature buffer" HorizontalAlignment="Left" Margin="137,76,0,0" VerticalAlignment="Top" Width="100" Foreground="#FFF9F9F9"/>
+        <TextBox x:Name="txtWaterBuffer" HorizontalAlignment="Left" Margin="12,57,0,0" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120" TextChanged="txtWaterBuffer_TextChanged"/>
+        <Label Content="Water buffer" HorizontalAlignment="Left" Margin="137,53,0,0" VerticalAlignment="Top" Width="100" Foreground="#FFF9F9F9"/>
+        <TextBox x:Name="txtUrbanBuffer" HorizontalAlignment="Left" Margin="12,34,0,0" TextWrapping="Wrap" Text="100" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Urban buffer" HorizontalAlignment="Left" Margin="137,30,0,0" VerticalAlignment="Top" Width="100" Foreground="#FFF9F9F9"/>
+        <Button x:Name="btnRoad" Content="Roads" HorizontalAlignment="Left" Margin="367,33,0,0" VerticalAlignment="Top" Click="btnRoad_Click" Width="107" Background="White"/>
+        <Button x:Name="btnWind" Content="Wind" HorizontalAlignment="Left" Margin="367,148,0,0" VerticalAlignment="Top" Click="btnWind_Click" Width="107" Background="White"/>
+        <TextBox x:Name="txtWind" HorizontalAlignment="Left" Margin="242,149,0,0" VerticalAlignment="Top" Width="120" TextChanged="txtWind_TextChanged"/>
+        <TextBox x:Name="txtRoadBuffer" HorizontalAlignment="Left" Margin="12,11,0,0" VerticalAlignment="Top" Width="120" Text="30" TextChanged="txtRoadBuffer_TextChanged"/>
+        <Label Content="Road buffer" HorizontalAlignment="Left" Margin="137,7,0,0" VerticalAlignment="Top" Width="100" Foreground="#FFF9F9F9"/>
+        <TextBox x:Name="txtRoad" HorizontalAlignment="Left" Margin="242,34,0,0" VerticalAlignment="Top" Width="120" TextChanged="txtRoad_TextChanged"/>
+        <TextBox x:Name="txtRutnat" HorizontalAlignment="Left" Margin="242,11,0,0" VerticalAlignment="Top" Width="120" TextChanged="txtRutnat_TextChanged"/>
+        <Button x:Name="btnRutnat" Content="Rutnat" HorizontalAlignment="Left" Margin="367,10,0,0" VerticalAlignment="Top" Click="btnRutnat_Click" Width="107" BorderBrush="#FF707070" Background="White"/>
 
     </Grid>
 </Window>
